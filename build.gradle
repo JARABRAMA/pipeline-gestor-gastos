@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'me.champeau.jmh' version '0.7.3'
 }
 
 group = 'com.practica'
@@ -33,4 +34,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jmh {
+    jmhVersion = '1.37'
+    warmupIterations = 3
+    iterations = 5
+    fork = 1
+    if (project.hasProperty('benchmark')) {
+        includes = [project.property('benchmark')]
+    }
 }

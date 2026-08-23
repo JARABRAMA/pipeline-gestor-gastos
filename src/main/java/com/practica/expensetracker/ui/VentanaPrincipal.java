@@ -6,7 +6,6 @@ import com.practica.expensetracker.model.Gasto;
 import com.practica.expensetracker.repository.RepositorioGastos;
 import com.practica.expensetracker.service.RastreadorGastos;
 import com.practica.expensetracker.service.ServicioReporte;
-import com.practica.expensetracker.service.ValidadorGasto;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -30,7 +29,6 @@ public class VentanaPrincipal extends JFrame {
 
     private final RastreadorGastos rastreador;
     private final ServicioReporte servicioReporte;
-    private final ValidadorGasto validador = new ValidadorGasto();
 
     private final JTextField campoMonto = new JTextField(8);
     private final JComboBox<Categoria> comboCategoria = new JComboBox<>(Categoria.values());
@@ -124,7 +122,6 @@ public class VentanaPrincipal extends JFrame {
             String descripcion = campoDescripcion.getText().trim();
 
             Gasto gasto = new Gasto(monto, categoria, fecha, descripcion);
-            validador.validar(gasto);
             rastreador.agregarGasto(gasto);
 
             limpiarFormulario();

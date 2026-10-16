@@ -1,7 +1,9 @@
 plugins {
     id 'java'
     id 'application'
+    id 'jacoco'
     id 'me.champeau.jmh' version '0.7.3'
+    id 'org.sonarqube' version '7.5.0.8588'
 }
 
 group = 'com.practica'
@@ -9,7 +11,7 @@ version = '0.1.0'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -19,6 +21,29 @@ application {
 
 repositories {
     mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true   // SonarCloud reads the XML report
+        html.required = false
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "Brayan Jaraba_pipeline-gestor-gastos"
+        property "sonar.organization", "Brayan Jaraba"
+        property "sonar.host.url", "https://sonarcloud.io"
+        // Optional:
+        // property "sonar.coverage.exclusions", "**/config/**,**/dto/**,**/*Application.java"
+    }
 }
 
 dependencies {

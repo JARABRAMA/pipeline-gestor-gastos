@@ -54,8 +54,6 @@ sonar {
   properties {
     property "sonar.projectKey", "JARABRAMA_pipeline-gestor-gastos"
     property "sonar.organization", "jarabrama"
-    property "sonar.coverage.exclusions",
-        "**/*Main.java", "**/ui/**", "**/exception/**"
   }
 }
 

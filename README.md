@@ -1,18 +1,11 @@
 # gestor-gastos-java-pruebas
 
-Rastreador de gastos personales en Java, construido con Gradle. Es un proyecto
-de práctica pensado para escribir pruebas unitarias sobre una base de código
-limpia y modular que aplica principios SOLID desde el diseño (inyección de
-dependencias por constructor, separación de responsabilidades entre modelo,
-repositorio, validación y servicios).
+Rastreador de gastos personales en Java, convertido a una API REST con Spring Boot. El proyecto mantiene el dominio, servicios y repositorio en memoria, aplicando principios SOLID (inyección de dependencias por constructor, separación de responsabilidades).
 
 ## Requisitos
 
-- JDK 25 (o superior). El proyecto usa un toolchain de Gradle, por lo que
-  puede descargar y usar automáticamente el JDK requerido si no está
-  instalado localmente.
-- No es necesario tener Gradle instalado: el proyecto incluye el Gradle
-  Wrapper (`gradlew` / `gradlew.bat`).
+- JDK 21. El proyecto usa un toolchain de Gradle para usarlo automáticamente si no está instalado localmente.
+- No es necesario tener Gradle instalado: incluye el Gradle Wrapper (`gradlew` / `gradlew.bat`).
 
 ## Compilar y ejecutar pruebas
 
@@ -26,6 +19,24 @@ En Windows (PowerShell / cmd):
 gradlew.bat build
 ```
 
+## Ejecutar la aplicación
+
+```bash
+./gradlew bootRun
+```
+
+La API estará disponible en `http://localhost:8080`.
+
+## Endpoints
+
+- `GET /api/gastos` - Listar todos los gastos (opcional: `?categoria=COMIDA`)
+- `GET /api/gastos/{id}` - Obtener un gasto por ID
+- `POST /api/gastos` - Crear un gasto
+- `DELETE /api/gastos/{id}` - Eliminar un gasto
+- `GET /api/reportes/total` - Calcular total de gastos
+- `GET /api/reportes/total/{categoria}` - Calcular total por categoría
+- `GET /api/reportes/promedio` - Calcular promedio de gastos
+
 ## Estructura de carpetas
 
 ```
@@ -38,15 +49,22 @@ gestor-gastos-java-pruebas/
     ├── main/java/com/practica/expensetracker/
     │   ├── model/          Categoria, Gasto
     │   ├── repository/     RepositorioGastos, RepositorioGastosEnMemoria
-    │   ├── service/        ValidadorGasto, RastreadorGastos, ServicioReporte
-    │   └── exception/      Excepciones de validación de Gasto
-    └── test/java/com/practica/expensetracker/   (vacío, pruebas en una fase posterior)
+    │   ├── service/        RastreadorGastos, ServicioReporte
+    │   ├── dto/            DTOs y respuestas de error
+    │   ├── controller/     Controladores REST y manejo de excepciones
+    │   ├── exception/      Excepciones de validación y no encontrado
+    │   └── GestorGastosApplication.java
+    └── test/java/com/practica/expensetracker/
+        ├── controller/     Pruebas de API con MockMvc
+        ├── model/          Pruebas del modelo
+        ├── repository/     Pruebas del repositorio
+        ├── service/        Pruebas de servicios
+        └── support/        Utilidades para pruebas
 ```
 
-## Dependencias de pruebas
+## Dependencias principales
 
-Configuradas en `build.gradle` pero sin pruebas escritas todavía:
-
-- JUnit Jupiter (JUnit 5) para pruebas unitarias
-- Mockito para mocks
-- AssertJ para aserciones fluidas
+- Spring Boot 3.5.16 (Web, Validation, Test)
+- JUnit Jupiter 6, Mockito, AssertJ
+- JMH para benchmarks
+- JaCoCo y SonarQube para análisis de calidad

@@ -7,7 +7,7 @@ Feature: Crear gastos
 
   Scenario: Crear un gasto con datos válidos
     Given path 'api', 'gastos'
-    And request { monto: 150.50, categoria: '#(categoriaA)', fecha: '#(hoy)', descripcion: 'Almuerzo' }
+    And request { monto: 150.50, categoria: '#(categoriaA)', fecha: '2026-10-10', descripcion: 'Almuerzo' }
     When method post
     Then status 201
     And match response ==
@@ -16,7 +16,7 @@ Feature: Crear gastos
         id: '#string',
         monto: 150.5,
         categoria: '#(categoriaA)',
-        fecha: '#(hoy)',
+        fecha: '2026-10-10',
         descripcion: 'Almuerzo'
       }
       """

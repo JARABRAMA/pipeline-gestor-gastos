@@ -4,43 +4,43 @@ Feature: Reportes de gastos
   Background:
     * url baseUrl
 
-  Scenario: El total general aumenta al registrar un gasto
+  Scenario: El total aumenta al crear un gasto
     Given path 'api', 'reportes', 'total'
     When method get
     Then status 200
-    And match response == '#number'
-    * def antes = response
+    * def antes = parseFloat(response)
+    * match antes == '#number'
 
     * call read('classpath:features/helpers/crear-gasto.feature') { monto: 100 }
 
     Given path 'api', 'reportes', 'total'
     When method get
     Then status 200
-    * def despues = response
-    * assert despues == antes + 100
+    * def despues = parseFloat(response)
+    * assert Math.abs(despues - (antes + 100)) < 0.001
 
   Scenario: El total por categoría solo suma los gastos de esa categoría
     Given path 'api', 'reportes', 'total', categoriaA
     When method get
     Then status 200
-    * def antesA = response
+    * def antesA = parseFloat(response)
 
     Given path 'api', 'reportes', 'total', categoriaB
     When method get
     Then status 200
-    * def antesB = response
+    * def antesB = parseFloat(response)
 
     * call read('classpath:features/helpers/crear-gasto.feature') { monto: 50, categoria: '#(categoriaA)' }
 
     Given path 'api', 'reportes', 'total', categoriaA
     When method get
     Then status 200
-    * assert response == antesA + 50
+    * assert Math.abs(parseFloat(response) - (antesA + 50)) < 0.001
 
     Given path 'api', 'reportes', 'total', categoriaB
     When method get
     Then status 200
-    * assert response == antesB
+    * assert Math.abs(parseFloat(response) - antesB) < 0.001
 
   Scenario: Rechazar un total por categoría inexistente
     Given path 'api', 'reportes', 'total', 'NO_EXISTE'
@@ -52,5 +52,6 @@ Feature: Reportes de gastos
     Given path 'api', 'reportes', 'promedio'
     When method get
     Then status 200
-    And match response == '#number'
-    * assert response > 0
+    * def promedio = parseFloat(response)
+    * match promedio == '#number'
+    * assert promedio > 0

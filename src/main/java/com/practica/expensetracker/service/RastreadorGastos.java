@@ -3,10 +3,12 @@ package com.practica.expensetracker.service;
 import com.practica.expensetracker.model.Categoria;
 import com.practica.expensetracker.model.Gasto;
 import com.practica.expensetracker.repository.RepositorioGastos;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class RastreadorGastos {
 
     private final RepositorioGastos repositorioGastos;

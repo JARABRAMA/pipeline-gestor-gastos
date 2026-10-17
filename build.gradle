@@ -28,13 +28,25 @@ test {
     finalizedBy jacocoTestReport
 }
 
+def coverageExclusions = [
+    "**/exception/**", 
+    "**/ui/**"
+]
+
 jacocoTestReport {
     dependsOn test
+    classDirectories.setFrom(
+        files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: coverageExclusions)
+        })
+    )
     reports {
         xml.required = true   // SonarCloud reads the XML report
-        html.required = false
+        html.required = true
+        csv.required = false
     }
 }
+
 
 sonar {
   properties {
@@ -67,3 +79,31 @@ jmh {
         includes = [project.property('benchmark')]
     }
 }
+
+
+jacoco {
+    toolVersion = "0.8.15"
+}
+
+jacocoTestCoverageVerification {
+    dependsOn test
+    classDirectories.setFrom(jacocoTestReport.classDirectories)  // reuse exclusions
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+        }
+        rule {
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
